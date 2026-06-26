@@ -1,0 +1,37 @@
+=== METRICAS DE AVALIACAO DO MODELO SVM (10.000 Registros) ===
+
+Melhores parametros encontrados: {'svc__C': 10, 'svc__gamma': 'scale', 'svc__kernel': 'rbf'}
+Melhor acuracia obtida na Validacao Cruzada (CV): 0.9456
+
+--- Desempenho no Conjunto de Teste (2.000 Registros) ---
+Acuracia Global: 0.9575
+
+Medias Ponderadas (Weighted Averages):
+Precisao: 0.9577
+Recall: 0.9575
+F1-Score: 0.9575
+
+Medias Simples (Macro Averages):
+Precisao: 0.9290
+Recall: 0.9342
+F1-Score: 0.9313
+
+--- Relatorio de Classificacao Detalhado ---
+              precision    recall  f1-score   support
+
+           1       0.98      0.98      0.98       999
+           2       0.94      0.95      0.95       639
+           3       0.95      0.89      0.92       217
+           4       0.89      0.92      0.90        92
+           5       0.89      0.92      0.91        53
+
+    accuracy                           0.96      2000
+   macro avg       0.93      0.93      0.93      2000
+weighted avg       0.96      0.96      0.96      2000
+
+--- Matriz de Confusao ---
+[[979  20   0   0   0]
+ [ 20 609   9   0   1]
+ [  0  17 193   7   0]
+ [  0   0   2  85   5]
+ [  0   0   0   4  49]]
