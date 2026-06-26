@@ -1,17 +1,69 @@
-# Classificação de Qualidade do Ar com SVM
+# Classificação de Qualidade do Ar - Projeto Multimodelo
 
-Este projeto implementa um pipeline de Aprendizado de Máquina utilizando Máquinas de Vetores de Suporte (SVM - Support Vector Machines) com a biblioteca Scikit-Learn para classificar a qualidade do ar de diversas cidades globais com base em fatores climáticos e poluentes atmosféricos.
+Este projeto implementa e avalia modelos de Aprendizado de Máquina para classificar a qualidade do ar de diversas cidades globais com base em fatores climáticos e poluentes atmosféricos, utilizando o conjunto de dados da OpenWeather API.
 
-## Dataset
-O projeto utiliza o conjunto de dados `data/openweather_weather_airpollution_top3cities_per_country_J.csv`, que reúne medições meteorológicas e de poluição de cidades de múltiplos países via OpenWeather API.
+A arquitetura do projeto foi estruturada para suportar múltiplos modelos independentes desenvolvidos por diferentes membros da equipe, reaproveitando módulos comuns para preprocessamento, seleção de features, avaliação e visualização.
 
-## Objetivo
-O objetivo principal é classificar o nível de qualidade do ar (AQI - Air Quality Index) em 5 classes padrão definidas pelo OpenWeather:
-- **1 (Good / Bom)**
-- **2 (Fair / Regular)**
-- **3 (Moderate / Moderado)**
-- **4 (Poor / Ruim)**
-- **5 (Very Poor / Muito Ruim)**
+---
+
+## Estrutura do Projeto
+
+O repositório é organizado da seguinte forma:
+
+```
+environmental-health/
+│
+├── common/                          # Módulos compartilhados e reutilizáveis
+│   ├── __init__.py
+│   ├── preprocessing.py             # Carga, limpeza, amostragem e split dos dados
+│   ├── feature_selection.py         # Definição das features preditoras e variável alvo
+│   ├── evaluation.py                # Métricas de classificação e salvamento de relatórios
+│   └── visualization.py             # Geração de gráficos (correlação, distribuição e confusão)
+│
+├── implementations/                 # Implementações independentes de modelos
+│   ├── svm/
+│   │   └── main.py                  # Script principal do classificador SVM
+│   ├── decision_tree/
+│   │   └── main.py                  # Script principal do classificador Decision Tree (Árvore de Decisão)
+│   └── neural_network/
+│       └── main.py                  # Script principal do classificador Neural Network (Rede Neural)
+│
+├── data/
+│   └── openweather_weather_airpollution_top3cities_per_country_J.csv
+│
+├── models/                          # Modelos serializados salvos por algoritmo
+│   ├── svm/
+│   │   └── modelo_svm.pkl
+│   ├── decision_tree/
+│   └── neural_network/
+│
+├── outputs/                         # Gráficos e métricas gerados por algoritmo
+│   ├── svm/
+│   │   ├── class_distribution.png
+│   │   ├── correlation_heatmap.png
+│   │   ├── confusion_matrix.png
+│   │   └── metrics.txt
+│   ├── decision_tree/
+│   └── neural_network/
+│
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
+
+---
+
+## Como Executar
+
+Para executar o pipeline do modelo SVM a partir do diretório raiz do projeto:
+
+```bash
+python implementations/svm/main.py
+```
+
+Isso carregará o dataset completo, gerará as análises exploratórias, treinará o modelo SVM otimizado em uma amostra estratificada de 10.000 registros, salvará as figuras e métricas em `outputs/svm/` e o modelo treinado final em `models/svm/modelo_svm.pkl`.
+
+---
 
 ## Justificativa de Seleção de Features (Feature Selection Justification)
 As variáveis preditoras (features) foram selecionadas utilizando três critérios metodológicos complementares:
@@ -29,7 +81,7 @@ As variáveis preditoras (features) foram selecionadas utilizando três critéri
 ## Variáveis do Modelo
 
 ### Variável Alvo (Target)
-- **`target_aqi_class`**: Variável numérica (inteiros de 1 a 5) representando a classe da qualidade do ar. Escolhida por sua representação ordinal e facilidade de manipulação direta pelos algoritmos sem necessidade de codificações adicionais.
+- **`target_aqi_class`**: Variável numérica (inteiros de 1 a 5) representando a classe da qualidade do ar (1 = bom, 5 = muito ruim).
 - A coluna `aqi_label` correspondente (good, fair, etc.) é utilizada exclusivamente para a interpretação e exibição legível dos resultados.
 
 ### Variáveis Preditoras (Features)
@@ -58,7 +110,9 @@ Selecionamos exatamente as seguintes 10 variáveis preditoras:
 6. **Validação Cruzada**: `StratifiedKFold` com 10 folds para estabilidade e consistência na avaliação dos hiperparâmetros.
 7. **GridSearchCV**: Otimização sistemática dos hiperparâmetros de penalidade ($C$), tipo de kernel e coeficiente gamma.
 
-## Resultados e Avaliação
+---
+
+## Resultados do Modelo SVM
 
 ### Melhores Hiperparâmetros
 - **Kernel**: `rbf` (Função de Base Radial)
@@ -84,13 +138,3 @@ Selecionamos exatamente as seguintes 10 variáveis preditoras:
    macro avg       0.93      0.93      0.93      2000
 weighted avg       0.96      0.96      0.96      2000
 ```
-
-*Nota: O aumento da amostragem de 5.000 para 10.000 registros melhorou significativamente as métricas de precisão, recall e f1-score das classes minoritárias (3, 4 e 5), permitindo que o modelo capture melhor as fronteiras de decisão.*
-
-## Estrutura de Arquivos Gerados
-O script `src/main.py` executa o pipeline de ponta a ponta e exporta os seguintes artefatos:
-- **`outputs/class_distribution.png`**: Gráfico de distribuição de classes de qualidade do ar.
-- **`outputs/correlation_heatmap.png`**: Heatmap com a matriz de correlação das variáveis preditoras selecionadas.
-- **`outputs/confusion_matrix.png`**: Matriz de confusão para o conjunto de testes.
-- **`outputs/metrics.txt`**: Documento de texto contendo todas as métricas detalhadas obtidas.
-- **`models/modelo_svm.pkl`**: O pipeline completo do modelo treinado (Scaler + SVC) serializado para produção.
