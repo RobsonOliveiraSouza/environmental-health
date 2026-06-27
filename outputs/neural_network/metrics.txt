@@ -1,0 +1,37 @@
+=== METRICAS DE AVALIACAO DO MODELO REDE NEURAL (10.000 Registros) ===
+
+Melhores parametros encontrados: {'mlp__activation': 'relu', 'mlp__alpha': 0.001, 'mlp__hidden_layer_sizes': (64, 32), 'mlp__learning_rate_init': 0.01}
+Melhor acuracia obtida na Validacao Cruzada (CV): 0.9704
+
+--- Desempenho no Conjunto de Teste (2.000 Registros) ---
+Acuracia Global: 0.9685
+
+Medias Ponderadas (Weighted Averages):
+Precisao: 0.9685
+Recall: 0.9685
+F1-Score: 0.9685
+
+Medias Simples (Macro Averages):
+Precisao: 0.9453
+Recall: 0.9425
+F1-Score: 0.9438
+
+--- Relatorio de Classificacao Detalhado ---
+              precision    recall  f1-score   support
+
+           1       0.99      0.99      0.99       999
+           2       0.96      0.96      0.96       639
+           3       0.92      0.92      0.92       217
+           4       0.91      0.93      0.92        92
+           5       0.94      0.91      0.92        53
+
+    accuracy                           0.97      2000
+   macro avg       0.95      0.94      0.94      2000
+weighted avg       0.97      0.97      0.97      2000
+
+--- Matriz de Confusao ---
+[[990   9   0   0   0]
+ [ 11 613  15   0   0]
+ [  0  14 200   3   0]
+ [  0   0   3  86   3]
+ [  0   0   0   5  48]]

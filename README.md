@@ -164,18 +164,62 @@ python implementations/decision_tree/main.py
 
 ---
 
-## Neural Network
+## Neural Network (MLPClassifier)
 
-### Objetivo
-Classificar a qualidade do ar utilizando Redes Neurais Artificiais (Multi-Layer Perceptrons - `MLPClassifier`), otimizando arquiteturas de camadas ocultas e taxas de aprendizado.
+### Objective
+O objetivo desta implementação é classificar o Índice de Qualidade do Ar (AQI - Air Quality Index) em cinco classes distintas utilizando um modelo de Rede Neural Artificial do tipo Perceptron Multicamadas (`MLPClassifier`).
 
-### Execução
-O modelo de Rede Neural é iniciado por meio do comando:
+### Model Description
+A implementação utiliza um pipeline de Aprendizado de Máquina composto pelas seguintes etapas e componentes principais:
+- **StandardScaler**: Padronização prévia das variáveis preditoras (subtração da média e divisão pelo desvio padrão). O escalonamento é fundamental para redes neurais pois os algoritmos de otimização baseados em gradiente descendente são altamente sensíveis à escala das features. Dados não padronizados podem causar lentidão na convergência, instabilidade no treinamento e peso desproporcional a variáveis com maiores magnitudes. A padronização foi inserida em um `Pipeline` para evitar vazamento de dados (*data leakage*) entre os conjuntos de treino e teste.
+- **MLPClassifier**: Classificador de rede neural multicamadas configurado com parada precoce (`early_stopping=True`) e limite máximo de 500 iterações (`max_iter=500`).
+- **StratifiedKFold (10 folds)**: Esquema de validação cruzada com 10 partições estratificadas para garantir a mesma proporção de classes em cada fold durante a busca de hiperparâmetros.
+- **GridSearchCV**: Busca em grade sistemática dos hiperparâmetros específicos sobre a partição de treinamento.
+
+### Hyperparameter Optimization
+Durante a otimização via `GridSearchCV`, foram avaliados diferentes combinações de hiperparâmetros. Os melhores hiperparâmetros encontrados pela execução foram:
+- **Camadas Ocultas (`hidden_layer_sizes`)**: `(64, 32)`
+- **Função de Ativação (`activation`)**: `'relu'`
+- **Parâmetro de Regularização $L_2$ (`alpha`)**: `0.001`
+- **Taxa de Aprendizado Inicial (`learning_rate_init`)**: `0.01`
+
+### Final Results
+O desempenho do modelo foi avaliado no conjunto de teste independente (2.000 Registros) e na validação cruzada:
+- **Acurácia Média na Validação Cruzada (CV)**: **97,04%** (0.9704)
+- **Acurácia Geral no Teste**: **96,85%** (0.9685)
+- **F1-Score Ponderado (Weighted)**: **96,85%** (0.9685)
+
+### Classification Report
+Relatório detalhado de classificação obtido no conjunto de teste:
+```
+              precision    recall  f1-score   support
+
+           1       0.99      0.99      0.99       999
+           2       0.96      0.96      0.96       639
+           3       0.92      0.92      0.92       217
+           4       0.91      0.93      0.92        92
+           5       0.94      0.91      0.92        53
+
+    accuracy                           0.97      2000
+   macro avg       0.95      0.94      0.94      2000
+weighted avg       0.97      0.97      0.97      2000
+```
+
+### Outputs
+A implementação gera e armazena os seguintes artefatos nos diretórios do projeto:
+- **Gráficos e Relatórios**:
+  - `outputs/neural_network/class_distribution.png`
+  - `outputs/neural_network/correlation_heatmap.png`
+  - `outputs/neural_network/confusion_matrix.png`
+  - `outputs/neural_network/metrics.txt`
+- **Modelo Serializado**:
+  - `models/neural_network/modelo_neural_network.pkl`
+
+### Execution
+O modelo de Rede Neural é executado por meio do comando:
 ```bash
 python implementations/neural_network/main.py
 ```
-
-*Nota: Esta implementação e seus respectivos resultados serão finalizados e integrados posteriormente por outro membro da equipe.*
 
 ---
 
