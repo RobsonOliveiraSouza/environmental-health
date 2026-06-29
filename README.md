@@ -152,7 +152,52 @@ python implementations/svm/main.py
 ## Decision Tree
 
 ### Objetivo
-Classificar a qualidade do ar utilizando um modelo baseado em Árvore de Decisão (`DecisionTreeClassifier`), explorando profundidade máxima e critérios de divisão para obter regras legíveis.
+Classificar a qualidade do ar utilizando um modelo baseado em Árvore de Decisão (`DecisionTreeClassifier`), com regras interpretáveis e ajuste de hiperparâmetros para controlar complexidade, generalização e legibilidade do modelo.
+
+### Descrição do Modelo
+A implementação segue o mesmo pipeline metodológico das demais abordagens do projeto:
+- **Seleção das mesmas 10 features preditoras** usadas pelas outras implementações.
+- **Amostragem estratificada de 10.000 registros** após limpeza de valores nulos.
+- **Divisão treino/teste de 80/20** com estratificação pela classe alvo.
+- **Validação cruzada estratificada com 10 folds** para busca de hiperparâmetros.
+- **GridSearchCV** para encontrar a melhor combinação de parâmetros da árvore.
+
+### Hiperparâmetros Avaliados
+- **Critério de divisão**: `['gini', 'entropy', 'log_loss']`
+- **Profundidade máxima**: `[4, 5, 6]`
+- **Número mínimo de amostras para divisão**: `[2, 5, 10]`
+- **Número mínimo de amostras por folha**: `[4, 8]`
+- **Estratégia de split**: `['best', 'random']`
+
+### Resultados Finais
+Após a execução do modelo, os melhores hiperparâmetros encontrados foram:
+- **Critério**: `entropy`
+- **Profundidade máxima**: `6`
+- **Número mínimo de amostras para divisão**: `2`
+- **Número mínimo de amostras por folha**: `8`
+- **Estratégia de split**: `best`
+
+O desempenho obtido foi:
+- **Precisão ponderada no conjunto de teste**: **99,38%** (0.9938)
+- **Acurácia média na validação cruzada (CV)**: **99,41%** (0.9941)
+- **Acurácia no conjunto de teste**: **99,35%** (0.9935)
+- **F1-Score ponderado no conjunto de teste**: **99,35%** (0.9935)
+
+### Relatório de Classificação
+Relatório detalhado de classificação obtido no conjunto de teste:
+```
+              precision    recall  f1-score   support
+
+           1     1.0000    1.0000    1.0000       999
+           2     0.9984    0.9984    0.9984       639
+           3     0.9857    0.9539    0.9696       217
+           4     0.9091    0.9783    0.9424        92
+           5     1.0000    1.0000    1.0000        53
+
+    accuracy                         0.9935      2000
+   macro avg     0.9786    0.9861    0.9821      2000
+weighted avg     0.9938    0.9935    0.9935      2000
+```
 
 ### Execução
 O modelo de Árvore de Decisão é iniciado por meio do comando:
@@ -160,7 +205,14 @@ O modelo de Árvore de Decisão é iniciado por meio do comando:
 python implementations/decision_tree/main.py
 ```
 
-*Nota: Esta implementação e seus respectivos resultados serão finalizados e integrados posteriormente por outro membro da equipe.*
+O script foi ajustado para resolver automaticamente os caminhos do dataset, das saídas e do modelo a partir da raiz do projeto, então ele também pode ser executado com segurança a partir da pasta `implementations/decision_tree`.
+
+### Saídas Geradas
+- `outputs/decision_tree/class_distribution.png`
+- `outputs/decision_tree/correlation_heatmap.png`
+- `outputs/decision_tree/confusion_matrix.png`
+- `outputs/decision_tree/metrics.txt`
+- `models/decision_tree/modelo_decision_tree.pkl`
 
 ---
 

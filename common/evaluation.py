@@ -21,7 +21,7 @@ def evaluate_predictions(y_true, y_pred):
     f1_macro = f1_score(y_true, y_pred, average='macro', zero_division=0)
     
     cm = confusion_matrix(y_true, y_pred)
-    report = classification_report(y_true, y_pred, zero_division=0)
+    report = classification_report(y_true, y_pred, zero_division=0, digits=4)
     
     return {
         'accuracy': acc,
