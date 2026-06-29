@@ -5,7 +5,7 @@ Gera gráficos de análise exploratória e resultados de modelos de classificaç
 """
 
 import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
 from sklearn.metrics import ConfusionMatrixDisplay
 
 def save_class_distribution_plot(filepath, class_counts):
@@ -21,7 +21,8 @@ def save_class_distribution_plot(filepath, class_counts):
     }
     plt.figure(figsize=(8, 5))
     class_labels = [label_mapping[i] for i in class_counts.index]
-    sns.barplot(x=class_labels, y=class_counts.values, hue=class_labels, legend=False, palette='viridis')
+    colors = plt.cm.viridis(np.linspace(0.15, 0.85, len(class_labels)))
+    plt.bar(class_labels, class_counts.values, color=colors)
     plt.title('Distribuição das Classes de Qualidade do Ar (Dataset Completo Filtrado)')
     plt.xlabel('Classe de AQI')
     plt.ylabel('Frequência')
@@ -34,7 +35,15 @@ def save_correlation_heatmap(filepath, correlation_matrix):
     Gera e salva a matriz de correlação em formato de heatmap.
     """
     plt.figure(figsize=(10, 8))
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
+    matrix = correlation_matrix.values
+    image = plt.imshow(matrix, cmap='coolwarm', aspect='auto')
+    plt.colorbar(image, fraction=0.046, pad=0.04)
+    tick_labels = list(correlation_matrix.columns)
+    plt.xticks(range(len(tick_labels)), tick_labels, rotation=45, ha='right')
+    plt.yticks(range(len(tick_labels)), tick_labels)
+    for row in range(matrix.shape[0]):
+        for col in range(matrix.shape[1]):
+            plt.text(col, row, f'{matrix[row, col]:.2f}', ha='center', va='center', color='black', fontsize=8)
     plt.title('Matriz de Correlação das Variáveis Preditoras (Dataset Completo Filtrado)')
     plt.tight_layout()
     plt.savefig(filepath)
